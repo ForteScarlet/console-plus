@@ -3,7 +3,7 @@ package com.forte.plusutils.consoleplus.system;
 import java.io.PrintStream;
 
 /**
- * 颜色控制台打印
+ * 颜色控制台(未完成)
  * @author ForteScarlet <[163邮箱地址]ForteScarlet@163.com>
  * @since JDK1.8
  **/
