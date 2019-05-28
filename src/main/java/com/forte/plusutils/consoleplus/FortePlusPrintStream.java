@@ -1,6 +1,7 @@
 package com.forte.plusutils.consoleplus;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.function.Function;
@@ -14,7 +15,7 @@ public class FortePlusPrintStream extends PrintStream {
     /**
      * 消息转化器，默认不做处理
      */
-    private Function<String, String> printFunction = str -> str;
+    private Function<Object, String> printFunction = String::valueOf;
 
     /**
      * Creates a new print stream.  This stream will not flush automatically.
@@ -176,7 +177,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(char c) {
-        super.print(printFunction.apply(String.valueOf(c)));
+        super.print(printFunction.apply(c));
     }
 
     /**
@@ -191,7 +192,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(int i) {
-        super.print(printFunction.apply(String.valueOf(i)));
+        super.print(printFunction.apply(i));
     }
 
     /**
@@ -206,7 +207,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(long l) {
-        super.print(printFunction.apply(String.valueOf(l)));
+        super.print(printFunction.apply(l));
     }
 
     /**
@@ -221,7 +222,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(float f) {
-        super.print(printFunction.apply(String.valueOf(f)));
+        super.print(printFunction.apply(f));
     }
 
     /**
@@ -236,7 +237,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(double d) {
-        super.print(printFunction.apply(String.valueOf(d)));
+        super.print(printFunction.apply(d));
     }
 
     /**
@@ -279,7 +280,7 @@ public class FortePlusPrintStream extends PrintStream {
      */
     @Override
     public void print(Object obj) {
-        super.print(printFunction.apply(String.valueOf(obj)));
+        super.print(printFunction.apply(obj));
     }
 
     /**
@@ -508,7 +509,33 @@ public class FortePlusPrintStream extends PrintStream {
     }
 
 
-    public void setPrintFunction(Function<String, String> printFunction) {
+    public void setPrintFunction(Function<Object, String> printFunction) {
         this.printFunction = printFunction;
     }
+
+
+    public static FortePlusPrintStream getInstance(PrintStream printStream, Function<Object, String> printFunction) throws IllegalAccessException, UnsupportedEncodingException {
+
+        FortePlusPrintStream fortePlusPrintStream = new FortePlusPrintStream(new OutputStream() {
+            @Override
+            public void write(int b){}
+        }, true, "UTF-8");
+
+
+        //PrintStream的参数
+        Field[] declaredFields = PrintStream.class.getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            Object o = field.get(printStream);
+            field.set(fortePlusPrintStream, o);
+        }
+
+        if(printFunction != null){
+            fortePlusPrintStream.setPrintFunction(printFunction);
+        }
+
+        return fortePlusPrintStream;
+    }
+
+
 }

@@ -1,9 +1,7 @@
 package com.forte.plusutils.consoleplus;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.function.Function;
 
 /**
@@ -20,25 +18,10 @@ public class ConsolePlus {
      * @throws UnsupportedEncodingException
      * @throws IllegalAccessException
      */
-    public static void updatePrint(Function<String, String> printFunction) throws UnsupportedEncodingException, IllegalAccessException {
+    public static void updatePrintOut(Function<Object, String> printFunction) throws UnsupportedEncodingException, IllegalAccessException {
         PrintStream out = System.out;
-        FortePlusPrintStream fortePlusPrintStream = new FortePlusPrintStream(new OutputStream() {
-            @Override
-            public void write(int b){}
-        }, true, "UTF-8");
 
-
-        //PrintStream的参数
-        Field[] declaredFields = PrintStream.class.getDeclaredFields();
-        for (Field field : declaredFields) {
-            field.setAccessible(true);
-            Object o = field.get(out);
-            field.set(fortePlusPrintStream, o);
-        }
-
-        if(printFunction != null){
-            fortePlusPrintStream.setPrintFunction(printFunction);
-        }
+        FortePlusPrintStream fortePlusPrintStream = FortePlusPrintStream.getInstance(out, printFunction);
 
         //取代对象
         System.setOut(fortePlusPrintStream);
@@ -49,10 +32,32 @@ public class ConsolePlus {
      * @throws UnsupportedEncodingException
      * @throws IllegalAccessException
      */
-    public static void updatePrint() throws UnsupportedEncodingException, IllegalAccessException {
-        updatePrint(null);
+    public static void updatePrintOut() throws UnsupportedEncodingException, IllegalAccessException {
+        updatePrintOut(null);
     }
 
+
+    /**
+     * 取代System.err
+     * @throws UnsupportedEncodingException
+     * @throws IllegalAccessException
+     */
+    public static void updatePrintErr(Function<Object, String> printFunction) throws UnsupportedEncodingException, IllegalAccessException {
+        PrintStream err = System.err;
+        FortePlusPrintStream fortePlusPrintStream = FortePlusPrintStream.getInstance(err, printFunction);
+
+        //取代对象
+        System.setErr(fortePlusPrintStream);
+    }
+
+    /**
+     * 取代System.err对象
+     * @throws UnsupportedEncodingException
+     * @throws IllegalAccessException
+     */
+    public static void updatePrintErr() throws UnsupportedEncodingException, IllegalAccessException {
+        updatePrintErr(null);
+    }
 
 
 }
