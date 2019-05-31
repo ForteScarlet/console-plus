@@ -59,5 +59,4 @@ public class ConsolePlus {
         updatePrintErr(null);
     }
 
-
 }

@@ -75,12 +75,8 @@ public class ColorsBuilder {
         return this;
     }
 
-    public ColorsBuilder add(Object str, FontColorTypes fontColor){
-        return add(str, fontColor.getColorIndex());
-    }
-
-    public ColorsBuilder add(Object str, BackGroundColorTypes backGroundColor){
-        return add(str, backGroundColor.getColorIndex());
+    public ColorsBuilder add(Object str, ColorTypes colorTypes){
+        return add(str, colorTypes.getColorIndex());
     }
 
 

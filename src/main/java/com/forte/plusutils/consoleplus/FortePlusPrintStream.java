@@ -15,7 +15,7 @@ public class FortePlusPrintStream extends PrintStream {
     /**
      * 消息转化器，默认不做处理
      */
-    private Function<Object, String> printFunction = String::valueOf;
+    private volatile Function<Object, String> printFunction = String::valueOf;
 
     /**
      * Creates a new print stream.  This stream will not flush automatically.
@@ -482,8 +482,10 @@ public class FortePlusPrintStream extends PrintStream {
     }
 
 
-    /** character[]转char[] */
-    private Character[] charToCharacter(char[] x){
+    /**
+     * character[]转char[]
+     */
+    private Character[] charToCharacter(char[] x) {
         Character[] re = new Character[x.length];
         for (int i = 0; i < x.length; i++) {
             re[i] = x[i];
@@ -491,8 +493,10 @@ public class FortePlusPrintStream extends PrintStream {
         return re;
     }
 
-    /** char[]转character[] */
-    private char[] characterToChar(Character[] x){
+    /**
+     * char[]转character[]
+     */
+    private char[] characterToChar(Character[] x) {
         char[] re = new char[x.length];
         for (int i = 0; i < x.length; i++) {
             re[i] = x[i];
@@ -500,7 +504,7 @@ public class FortePlusPrintStream extends PrintStream {
         return re;
     }
 
-    private String charArrayToStr(char[] s){
+    private String charArrayToStr(char[] s) {
         StringBuilder sb = new StringBuilder();
         for (char c : s) {
             sb.append(c);
@@ -518,7 +522,8 @@ public class FortePlusPrintStream extends PrintStream {
 
         FortePlusPrintStream fortePlusPrintStream = new FortePlusPrintStream(new OutputStream() {
             @Override
-            public void write(int b){}
+            public void write(int b) {
+            }
         }, true, "UTF-8");
 
 
@@ -530,12 +535,11 @@ public class FortePlusPrintStream extends PrintStream {
             field.set(fortePlusPrintStream, o);
         }
 
-        if(printFunction != null){
+        if (printFunction != null) {
             fortePlusPrintStream.setPrintFunction(printFunction);
         }
 
         return fortePlusPrintStream;
     }
-
 
 }
