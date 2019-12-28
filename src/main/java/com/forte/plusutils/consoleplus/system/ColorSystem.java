@@ -34,7 +34,9 @@ public class ColorSystem {
 
     static {
         out = getTimeTypePrintStream(System.out, OUT_TYPE, OUT_COLOR);
-        err = getTimeTypePrintStream(System.out, ERR_TYPE, ERR_COLOR);
+
+        // err use System.err
+        err = getTimeTypePrintStream(System.err, ERR_TYPE, ERR_COLOR);
 
         info = getTimeTypePrintStream(System.out, INFO_TYPE, INFO_COLOR);
         debug = getTimeTypePrintStream(System.out, DEBUG_TYPE, DEBUG_COLOR);
